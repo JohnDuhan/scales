@@ -8,8 +8,9 @@
 <html>
   <head>
     <base target="_top">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="styles/style.css" rel="stylesheet" />
   </head>
-  <link href="styles/style.css" rel="stylesheet" />
   <body>
 
 <!-- Trigger/Open The Modal -->
@@ -58,16 +59,16 @@ window.onclick = function(event) {
   </script>
 </div>
     <div style="padding: 20px">
-    <h1>Scales!</h1>
+    <h1 class="fs-1 fw-bold">Scales!</h1>
     <div>
-      <p>Concert Pitch
+      <p class="fs-3">Concert Pitch
       <label class="switch"><input type="checkbox" id="pitch-pick-slider" onchange="scaleType()"><span class="slider round"></span>
       </label>
       My Instrument Pitch</p>
     </div>
     <div id="inst-drop">
       <label for="instruments"></label>
-      <select name="instruments" id="instruments" onchange="chooseInstr(this)">
+      <select class="form-select form-select-lg" name="instruments" id="instruments" onchange="chooseInstr(this)">
         <option hidden="" disabled="" selected="">Select Instrument</option>
         <option value="flute">Flute</option>
         <option value="oboe">Oboe</option>
@@ -123,7 +124,7 @@ window.onclick = function(event) {
         <option value="4-U">Final 4 - Upper</option>
         <option value="15-L">Lower Octave</option>
         <option value="15-U">Upper Octave</option>
-<!--        <option value="29-UL">Lower & Upper Octaves</option>-->
+        <option value="29-UL">Lower & Upper Octaves</option>-->
 <!--      </select>-->
 <script>
 function segDropBuild(d){
@@ -212,6 +213,7 @@ console.log('segArr',segArr);
   var div = document.getElementById('segment-drop');
         div.innerHTML = '<label for="'+scaleType+'"></label>'
           var sel = document.createElement('select');
+          sel.setAttribute('class','form-select form-select-lg');
           sel.setAttribute('name',scaleType);
           sel.setAttribute('id',scaleType);
           sel.setAttribute('onchange','segSelect(this)');
@@ -309,6 +311,7 @@ function scaleDropBuild(id){
     var div = document.getElementById('scale-drop');
           div.innerHTML = '<label for="'+id+'"></label>'
             var sel = document.createElement('select');
+            sel.setAttribute('class','form-select form-select-lg');
             sel.setAttribute('name',id);
             sel.setAttribute('id',id);
             sel.setAttribute('onchange','segDropBuild(this)');
