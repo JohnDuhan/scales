@@ -1,0 +1,539 @@
+<!--chromatic build plan
+1.Add "Chromatic" as an option in scaleDropBuild
+--instruments.html lines 13-20--need to trigger segment drop change instead of processScale()
+2.Segments change if chromatic selected
+3.When to link up with other scale building functions? After note list is made - right?
+4.Follow trombone model and build full out of the segments. What about odd segments (top of range ww's?)?-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <link href="styles/style.css" rel="stylesheet" />
+  <body>
+
+<!-- Trigger/Open The Modal -->
+<button style="display:none" id="myBtn">Open Modal</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p></p>
+    <img id="fingering-img" src="https://drive.google.com/uc?id=1MRi9dm02SpuwvUA12Sj8rHX2JOa3JDqz" width="75" height="175">
+  </div>
+<script>
+  function clickBtn(d){
+    var fingURL = 'https://drive.google.com/uc?id='+d.dataset.fing
+    $("#fingering-img").attr('src',fingURL)
+    $("#myBtn").click();
+    }
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+  </script>
+</div>
+    <div style="padding: 20px">
+    <h1>Scales!</h1>
+    <div>
+      <p>Concert Pitch
+      <label class="switch"><input type="checkbox" id="pitch-pick-slider" onchange="scaleType()"><span class="slider round"></span>
+      </label>
+      My Instrument Pitch</p>
+    </div>
+    <div id="inst-drop">
+      <label for="instruments"></label>
+      <select name="instruments" id="instruments" onchange="chooseInstr(this)">
+        <option hidden="" disabled="" selected="">Select Instrument</option>
+        <option value="flute">Flute</option>
+        <option value="oboe">Oboe</option>
+        <option value="bassoon">Bassoon</option>
+        <option value="clarinet">Clarinet</option>
+        <option value="bassclar">Bass Clarinet</option>
+        <option value="altosax">Alto Sax</option>
+        <option value="tensax">Tenor Sax</option>
+        <option value="barisax">Bari Sax</option>
+        <option value="trumpet">Trumpet</option>
+        <option value="horn">Horn</option>
+        <option value="trombone">Trombone</option>
+        <option value="euphonium">Euphonium</option>
+        <option value="tuba">Tuba</option>
+        <option value="mallets">Mallets</option>
+      </select>
+    </div>
+    <br>
+    <div id="scale-drop">
+      <!--built dynamically with function scaleDropBuild()
+      OG commented out for reference-->
+<!--      <label for="concert-pitch-scales">Choose Concert Pitch Scale</label>
+      <select name="concert-pitch-scales" id="concert-pitch-scales" onchange="segDropBuild(this)">
+        <option hidden="" disabled="" selected="">Scale</option>
+        <option value="c">C Major</option>
+        <option value="g">G Major</option>
+        <option value="d">D Major</option>
+        <option value="a">A Major</option>
+        <option value="e">E Major</option>
+        <option value="b">B Major</option>
+        <option value="cb">Cb Major</option>
+        <option value="f#">F# Major</option>
+        <option value="gb">Gb Major</option>
+        <option value="c#">C# Major</option>
+        <option value="db">Db Major</option>
+        <option value="ab">Ab Major</option>
+        <option value="eb">Eb Major</option>
+        <option value="bb">Bb Major</option>
+        <option value="f">F Major</option>
+      </select>-->
+    </div>
+    <br>
+    <div style="display: none" id="segment-drop">
+//created dynamically when scale selected
+<!--      <label for="segment"></label>
+      <select name="segments" id="segments" onchange="segSelect(this)">
+        <option hidden="" disabled="" selected="">Select Segment</option>
+        <option value="3-L">1st 3 - Lower</option>
+        <option value="3-U">1st 3 - Upper</option>
+        <option value="5-L">1st 5 - Lower</option>
+        <option value="5-U">1st 5 - Upper</option>
+        <option value="4-L">Final 4 - Lower</option>
+        <option value="4-U">Final 4 - Upper</option>
+        <option value="15-L">Lower Octave</option>
+        <option value="15-U">Upper Octave</option>
+<!--        <option value="29-UL">Lower & Upper Octaves</option>-->
+<!--      </select>-->
+<script>
+function segDropBuild(d){
+  console.log('segDrop',isConcert,instrSelection)
+    document.getElementById("segment-drop").innerHTML="";
+    var type = $(d).val();
+    var segArr = [];
+    var valsArr = [];
+    if (type == 'chromatic') {
+      chromatic = true;
+      var scaleType = type+'-segs';
+      //this will need to be dynamically created based on the number of segments for the selected instrument
+      //build custom drops for each instrument if 'my instrument' selected
+      if (!isConcert){
+        console.log('here',141)
+        switch(instrSelection){
+          case 'flute':
+          segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','7','8','7&8']
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','7-L','8-L','78-L']
+          break;
+
+          case 'oboe':
+          segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','1-6 (2 Octaves)']
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','16-L']
+          break;
+
+          case 'clarinet':
+          segArr = ['1-Low','1-High','2-Low','2-High','1&2-Low','1&2-High','3-Low','3-High','2&3-Low','2&3-High','1-3-Low','1-3-High','4-Low','4-High','3&4-Low','3&4-High','1-4-Low','1-4-High','Complete'];
+          valsArr = ['1-L','5-L','2-L','6-L','12-L','56-L','3-L','7-L','23-L','67-L','13-L','57-L','4-L','8-L','34-L','78-L','14-L','58-L','18-L']
+          break;
+          
+          case 'altosax':
+          segArr = ['Bottom','1-Low','Bottom & 1','1-High','2-Low','2-High','1&2-Low','1&2-High','3-Low','3-High','2&3-Low','2&3-High','1-3-Low','Bottom-3-Low','1-3-High','Complete'];
+          valsArr = ['1-L','2-L','12-L','5-L','3-L','6-L','23-L','56-L','4-L','7-L','34-L','67-L','24-L','14-L','57-L','18-L'];
+          break;
+
+          case 'tensax':
+          segArr = ['Bottom','1-Low','Bottom & 1','1-High','2-Low','2-High','1&2-Low','1&2-High','3-Low','3-High','2&3-Low','2&3-High','1-3-Low','Bottom-3-Low','1-3-High','Complete'];
+          valsArr = ['1-L','2-L','12-L','5-L','3-L','6-L','23-L','56-L','4-L','7-L','34-L','67-L','24-L','14-L','57-L','18-L'];
+          break;
+
+          case 'trumpet':
+          segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','1-6 (2 Octaves)']
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','16-L']
+        console.log(segArr,146)
+        break;
+
+          case 'horn':
+          segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','1-6 (2 Octaves)']
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','16-L']
+          break;
+
+          case 'trombone':
+          console.log('trombone - here')
+          segArr = ['1','2','1-2 (Lower Octave)','3','2&3','4','3&4','5','4&5','3-5 (Lower Octave)','1-5 (2 Octaves)'];
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','4-L','34-L','5-L','45-L','35-L','15-L'];
+          break;
+
+          case 'euphonium':
+          segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','1-6 (2 Octaves)']
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','16-L']
+          break;
+
+          case 'tuba':
+          segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','1-6 (2 Octaves)']
+          valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','16-L']
+          break;
+        }
+      }
+      //build uniform segments if 'concert' selected
+      else{
+        console.log('here',184);
+        segArr = ['1','2','1&2','3','2&3','1-3 (Lower Octave)','4','1-4','5','4&5','1-5','6','5&6','4-6 (Upper Octave)','1-6 (2 Octaves)']
+        //"13" & "46" are index 1-3 and 4-6
+        valsArr = ['1-L','2-L','12-L','3-L','23-L','13-L','4-L','14-L','5-L','45-L','15-L','6-L','56-L','46-L','16-L']
+        }
+      }
+    else {
+      console.log('here',191);
+      chromatic = false;
+      scaleType = 'major-segs'
+      segArr = ['1st 3 - Lower','1st 3 - Upper','1st 5 - Lower','1st 5 - Upper','Final 4 - Lower','Final 4 - Upper','Lower Octave','Upper Octave']
+      valsArr = ['3-L','3-U','5-L','5-U','4-L','4-U','15-L','15-U'];
+    }
+console.log('segArr',segArr);
+  var div = document.getElementById('segment-drop');
+        div.innerHTML = '<label for="'+scaleType+'"></label>'
+          var sel = document.createElement('select');
+          sel.setAttribute('name',scaleType);
+          sel.setAttribute('id',scaleType);
+          sel.setAttribute('onchange','segSelect(this)');
+          sel.innerHTML = '<option hidden="" disabled="" selected="">Select Segment</option>';
+          for (var i=0; i < segArr.length; i++){
+            var opt = document.createElement('option');
+            opt.setAttribute('value',valsArr[i]);
+            opt.text = segArr[i];
+            sel.appendChild(opt);
+          }
+          div.appendChild(sel);
+          div.setAttribute("style","display:block");
+    scaleSelect(d);
+}
+
+</script>
+    </div>
+    <br>
+  <div id="output"></div>
+  </div>
+  <div><p><img id="ItemPreview"></p></div>
+  </body>
+
+<script>
+    var instrSelection = "";
+    var scaleSelection = "";
+    var ogScaleSelection = "";
+    var segment = "";
+    var segText = '';
+    var octave = "";
+    var isUpper = false;
+    var isConcert = true;
+    var junior = true;
+    var chromatic = false;
+
+function reset(){
+    if(document.getElementById("segment-drop") !== null){
+      document.getElementById("segment-drop").innerHTML="";
+    }
+    scaleSelection = "";
+    segment = "";
+    octave = "";
+    isUpper = false;
+    chromatic = false;
+    
+    if (!isConcert){
+      scaleDropBuild('my-instr-pitch-scale-drop');
+    }
+    if (isConcert){
+      scaleDropBuild('concert-pitch-scale-drop');
+    }
+      if (document.getElementById('concert-pitch-scales') !== null){
+        document.getElementById('concert-pitch-scales').selectedIndex = 0;
+        }
+      if (document.getElementById('my-instr-pitch-scales') !== null){
+        document.getElementById('my-instr-pitch-scales').selectedIndex = 0;
+      }
+//prior to dynamic segdropbuild
+//      document.getElementById('segments').selectedIndex = 0;
+      document.getElementById('output').innerHTML = "";
+}
+    function chooseInstr(d){
+      instrSelection = $(d).val();
+      reset();
+      if (scaleSelection == ""){document.getElementById('output').innerHTML = "<h4>Select a scale</h4>"; return;}
+      if (segment == ""){document.getElementById('output').innerHTML = "<h4>Select a segment</h4>";}
+    }
+function scaleType(){
+        document.getElementById('output').innerHTML = "";
+          var slider = document.getElementById('pitch-pick-slider');
+          if (slider.checked){
+//            document.getElementById("concert-pitch-scale-drop").setAttribute("style","display:none");
+//            document.getElementById("my-instr-pitch-scale-drop").setAttribute("style","display:block");
+            scaleDropBuild('my-instr-pitch-scale-drop');
+            isConcert = false;
+            };
+          if (!slider.checked){
+//            document.getElementById("concert-pitch-scale-drop").setAttribute("style","display:block");
+//            document.getElementById("my-instr-pitch-scale-drop").setAttribute("style","display:none");
+            scaleDropBuild('concert-pitch-scale-drop');
+            isConcert = true;
+          }
+        reset();
+        }
+
+function scaleDropBuild(id){
+//setting values to essentially reverse transpose transposing instruments to set it up
+//for the original transposition "switch" formula
+    var scalesArr = ['C Major','G Major','D Major','A Major','E Major','B Major','Cb Major','F# Major','Gb Major','C# Major','Db Major','Ab Major','Eb Major','Bb Major','F Major'];
+    var concertPitchVals = ['c','g','d','a','e','b','cb','f#','gb','c#','db','ab','eb','bb','f'];
+    var bbPitchVals = ['bb','f','c','g','d','a','bbb','e','fb','b','cb','gb','db','ab','eb'];
+    var ebPitchVals = ['eb','bb','f','c','g','d','ebb','a','bbb','e','fb','cb','gb','db','ab'];
+    var fPitchVals = ['f','c','g','d','a','e','fb','b','cb','f#','gb','db','ab','eb','bb']
+
+    var div = document.getElementById('scale-drop');
+          div.innerHTML = '<label for="'+id+'"></label>'
+            var sel = document.createElement('select');
+            sel.setAttribute('name',id);
+            sel.setAttribute('id',id);
+            sel.setAttribute('onchange','segDropBuild(this)');
+            sel.innerHTML = '<option hidden="" disabled="" selected="">Select Scale</option>';
+            for (var i=0; i < scalesArr.length; i++){
+                var opt = document.createElement('option');
+                if (id=='my-instr-pitch-scale-drop'){
+                  if (instrSelection == 'clarinet' || instrSelection == 'bassclar' || instrSelection == 'tensax' || instrSelection == 'trumpet'){
+                    if (junior && i > 3 && i < 12) {continue}
+                    opt.setAttribute('value',bbPitchVals[i]);
+                  }
+                  else if (instrSelection == 'altosax' || instrSelection == 'barisax'){
+                    if (junior && i > 4 && i < 13) {continue}
+                    opt.setAttribute('value',ebPitchVals[i]);
+                  }
+                  else if (instrSelection == 'horn'){
+                    if (junior && i > 2 && i < 11) {continue}
+                    opt.setAttribute('value',fPitchVals[i]);
+                  }
+                  else {
+                    if (junior && i > 1 && i < 10) {continue}
+                    opt.setAttribute('value',concertPitchVals[i])
+                    }
+                }
+              else {
+                if (junior && i > 1 && i < 10) {continue}
+                opt.setAttribute('value',concertPitchVals[i])
+                }
+                opt.text = scalesArr[i];
+                sel.appendChild(opt);
+            }
+          var chromOpt = document.createElement('option');
+          chromOpt.setAttribute('value','chromatic')
+          if (!isConcert){chromOpt.text = "Chromatic - My Instrument"};
+          if (isConcert) {chromOpt.text = "Chromatic - Concert F"};          
+          sel.appendChild(chromOpt); 
+          div.appendChild(sel);
+        }
+</script>
+<script>
+
+function segSelect(seg){
+      segText = $( "#"+seg.id+" option:selected" ).text();
+      segment = $(seg).val();
+      if (instrSelection == ""){document.getElementById('output').innerHTML = "<h4>Select an instrument</h4>";return;}
+      if (scaleSelection == ""){document.getElementById('output').innerHTML = "<h4>Select a scale</h4>"; return;}
+      processScale(segment);
+    }
+
+function processScale(seg){
+      document.getElementById('output').innerHTML = "";          
+//      var selection = $(d).val();
+
+      segmentInfo = segment.split('-');
+      segmentNum = segmentInfo[0];
+      segmentOct = segmentInfo[1];
+      if (segmentOct == 'U' && !isUpper){octave = octave +1; isUpper = true;};
+      if (segmentOct == 'L' && isUpper){octave = octave -1; isUpper = false;};
+      
+
+      //build vexFlow scale from pitch array with parameters ie: octave, note duration, etc.
+      //find full array of scale pitches to match scale selection
+      var thisScaleArr = [];
+        const notes = [];
+        var tonic = '';
+      if (chromatic){
+        console.log(instrSelection,313);
+        var chromScalesArr = [];
+        if (isConcert){
+          chromScalesArr = ensChromScalesArr;
+        }
+        else {chromScalesArr = indChromScalesArr}
+        console.log(chromScalesArr,'chromscalesarr');
+        chromScalesArr.find(function(r){
+          console.log(r[1])
+            console.log(segmentNum,1);
+          if (instrSelection == r[0] && segmentNum > 10){
+            var min = segmentNum[0];
+            var max = segmentNum[1];
+//add ascending pitches from segments
+            //calculation to find penultamite pitch to peak of ascending
+            var segCalc = '';
+            for (var i=min;i<=max;i++){
+              segCalc = (r[i].length-1)/2;
+            console.log(segCalc,'segCalc');
+              console.log(i);
+              for (var j=0;j<=segCalc-1;j++){
+                 thisScaleArr.push(r[i][j]);
+                }
+                 console.log(thisScaleArr,'lower8va')
+              }
+//used to add apex of combined segs            thisScaleArr.push(r[max][segCalc])
+//add descending pitches from segments
+            for (var i=max;i>=min;i--){
+              segCalc = (r[i].length-1)/2;
+              console.log(console.log(segCalc,'segCalc desc'));
+              for (var j=segCalc;j<=r[i].length-2;j++){
+                console.log(j);
+                console.log(r[i][j],'desc');
+                 thisScaleArr.push(r[i][j]);
+              }
+            }
+            thisScaleArr.push(r[min][r[min].length-1]);
+            return true;
+          }
+          else if (instrSelection == r[0] && segmentNum <=10){
+            thisScaleArr = r[segmentNum];
+            console.log(thisScaleArr,318);
+            return true;
+          }
+        })
+      }
+      //above for chromatic. below for major.
+      else {
+      scaleArr.find(function(r){
+        tonic = r[0].split('/');
+        tonic = tonic[0];
+        if (tonic == scaleSelection){
+          thisScaleArr = r;
+          return true;
+          }        
+      });
+      }
+
+  if (!chromatic){
+//only add portion of scale array to rendering
+      if (segmentNum <= 5){
+        miniScales(thisScaleArr,segmentNum,octave);
+        }
+//add entire scale array to rendering for complete scale
+      else {
+          for (var i=0; i < thisScaleArr.length; i++){
+            addPitch(i,thisScaleArr,octave,notes);
+            }
+          //run the renderer function
+            mapScale(notes,segmentNum);
+        }
+
+      function miniScales(scale,segNum) {
+        if (segNum == 4){
+          for (var i=4; i < 11; i++){
+            addPitch(i,scale,octave,notes);
+            }
+            segAdjust = Number(segmentNum-1);
+            segmentNum = parseInt(segmentNum) + parseInt(segAdjust);
+          //run the renderer function
+            mapScale(notes,segmentNum);
+        }
+        else {         
+          for (var i=0; i < segNum; i++){
+            addPitch(i,scale,octave,notes);
+            }
+          for (var i=scale.length-(segNum-1); i < 15; i++){
+            addPitch(i,scale,octave,notes);
+            }
+            segAdjust = Number(segmentNum-1);
+            segmentNum = parseInt(segmentNum) + parseInt(segAdjust);
+          //run the renderer function
+            mapScale(notes,segmentNum);
+        }
+        }
+    }
+    //above is major scales. below is chromatic
+    else {
+          for (var i=0; i < thisScaleArr.length; i++){
+            addPitch(i,thisScaleArr,octave,notes);
+            }
+          //run the renderer function
+          //effectively subsitute arr.length for segmentNum
+            mapScale(notes,thisScaleArr.length);
+        }
+  }
+  function addPitch(i,scale,octave,notes){
+    var thisPitchArr = [];
+    var thisPitch = '';
+    if (!chromatic){
+      thisPitchArr = scale[i].split('/');
+      var octaveAdd = Number(thisPitchArr[1])+octave;
+      octaveAdd = octaveAdd.toString();
+      thisPitch = thisPitchArr[0].concat('/',octaveAdd);
+      }
+    else {
+      thisPitch = scale[i];
+    }
+      var clef = '';
+      //set clef
+      if (instrSelection == 'bassoon' || instrSelection == 'trombone' || instrSelection == 'euphonium' || instrSelection == 'tuba'){
+        clef = 'bass';
+      }
+      else {
+        clef = 'treble';
+      }
+
+      if (thisPitch[1]=='#'){
+      notes.push(new StaveNote({keys: [thisPitch],duration:'w', clef: [clef]}).addModifier(new Accidental("#"), 0));
+      return notes;
+      }
+      else if (thisPitch[1]=='b'){
+      notes.push(new StaveNote({keys: [thisPitch],duration:'w', clef: [clef]}).addModifier(new Accidental("b"), 0));
+      return notes;
+      }
+      else {
+      notes.push(new StaveNote({keys: [thisPitch],duration:'w', clef: [clef]}));
+      return notes;
+      }
+  }    
+    </script>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/
+build/cjs/vexflow.js"></script>
+
+
+</html>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/build/cjs/vexflow.js"></script>
+<script src="scripts/main.js"></script>
+<!--<script src="scripts/vf.js"></script>-->
+<script src="scripts/scales.js"></script>
+<script src="scripts/instruments.js"></script>
+
+
+</html>
