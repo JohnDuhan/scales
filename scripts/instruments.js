@@ -246,7 +246,7 @@
           octave = 2;
           break;            
         }
-      if (instrSelection == "bassoon"||instrSelection == "trombone"||instrSelection == "euphonium"){
+      if (instrSelection == "trombone"||instrSelection == "euphonium"){
         switch (scaleSelection){
           case "c":
           scaleSelection = "c";
