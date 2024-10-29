@@ -246,6 +246,7 @@
           octave = 2;
           break;            
         }
+        }
       if (instrSelection == "trombone"||instrSelection == "euphonium"){
         switch (scaleSelection){
           case "c":
