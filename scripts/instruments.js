@@ -15,7 +15,7 @@
         switch (scaleSelection){
           case "c":
           scaleSelection = "c";
-          octave = 5;
+          octave = 4;
           break;
                     
           case "g":
@@ -169,6 +169,83 @@
         }
         console.log(scaleSelection, 93);
       }
+        if (instrSelection == "bassoon"){
+        switch (scaleSelection){
+          case "c":
+          scaleSelection = "c";
+          octave = 3;
+          break;
+                    
+          case "g":
+          scaleSelection = "g";
+          octave = 2;
+          break;
+
+          case "d":
+          scaleSelection = "d";
+          octave = 3;
+          break;
+
+          case "a":
+          scaleSelection = "a";
+          octave = 2;
+          break;
+
+          case "e":
+          scaleSelection = "e";
+          octave = 3;
+          break;
+
+          case "b":
+          scaleSelection = "b";
+          octave = 2;
+          break;
+
+          case "cb":
+          scaleSelection = "cb";
+          octave = 3;
+          break;
+
+          case "f#":
+          scaleSelection = "f#";
+          octave = 2;
+          break;
+
+          case "gb":
+          scaleSelection = "gb";
+          octave = 2;
+          break;
+
+          case "c#":
+          scaleSelection = "c#";
+          octave = 3;
+          break;
+
+          case "db":
+          scaleSelection = "db";
+          octave = 3;
+          break;
+
+          case "ab":
+          scaleSelection = "ab";
+          octave = 2;
+          break;
+
+          case "eb":
+          scaleSelection = "eb";
+          octave = 2;
+          break;
+
+          case "bb":
+          scaleSelection = "bb";
+          octave = 2;
+          break;
+
+          case "f":
+          scaleSelection = "f";
+          octave = 2;
+          break;            
+        }
       if (instrSelection == "bassoon"||instrSelection == "trombone"||instrSelection == "euphonium"){
         switch (scaleSelection){
           case "c":
