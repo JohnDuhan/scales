@@ -65,7 +65,7 @@
 
           case "db":
           scaleSelection = "db";
-          octave = 5;
+          octave = 4;
           break;
 
           case "ab":
