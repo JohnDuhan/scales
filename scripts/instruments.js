@@ -94,7 +94,7 @@
         switch (scaleSelection){
           case "c":
           scaleSelection = "c";
-          octave = 5;
+          octave = 4;
           break;
                     
           case "g":
@@ -159,7 +159,7 @@
 
           case "bb":
           scaleSelection = "bb";
-          octave = 5;
+          octave = 4;
           break;
 
           case "f":
